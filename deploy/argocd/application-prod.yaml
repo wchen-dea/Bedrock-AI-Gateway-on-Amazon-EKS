@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-system-prod
+  namespace: argocd
+  finalizers: [resources-finalizer.argocd.argoproj.io]
+spec:
+  project: ai-platform
+  source:
+    repoURL: REPLACE_WITH_GIT_REPO
+    targetRevision: prd
+    path: deploy/helm/ai-system
+    helm:
+      valueFiles: [values-prod.yaml]
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ai-system
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions: [CreateNamespace=true]

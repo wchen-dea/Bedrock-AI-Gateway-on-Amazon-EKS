@@ -1,0 +1,24 @@
+name: ci
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+permissions: {contents: read, id-token: write}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.11"
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run ruff check app
+      - run: uv run pytest -q
+      - uses: azure/setup-helm@v4
+      - run: helm lint deploy/helm/ai-system -f deploy/helm/ai-system/values-local.yaml
+      - run: docker build -t ai-system:${GITHUB_SHA} .

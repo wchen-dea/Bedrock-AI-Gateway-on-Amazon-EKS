@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-system
+  labels: {{- include "ai.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{- include "ai.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "ai.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      securityContext: {runAsNonRoot: true, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports: [{name: http, containerPort: 8080}]
+          env:
+            - {name: AI_PROVIDER, value: {{ .Values.config.aiProvider | quote }}}
+            - {name: AWS_REGION, value: {{ .Values.config.awsRegion | quote }}}
+            - {name: BEDROCK_MODEL_ID, value: {{ .Values.config.bedrockModelId | quote }}}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe: {httpGet: {path: /readyz, port: http}, initialDelaySeconds: 3, periodSeconds: 10}
+          livenessProbe: {httpGet: {path: /healthz, port: http}, initialDelaySeconds: 10, periodSeconds: 20}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}

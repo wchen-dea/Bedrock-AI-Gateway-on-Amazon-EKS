@@ -1,0 +1,10 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata: {name: ai-platform, namespace: argocd}
+spec:
+  sourceRepos: ['REPLACE_WITH_GIT_REPO']
+  destinations:
+    - {namespace: ai-system, server: https://kubernetes.default.svc}
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - {group: '*', kind: '*'}

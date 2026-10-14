@@ -1,0 +1,7 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata: {name: ai-system}
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels: {{- include "ai.labels" . | nindent 6 }}

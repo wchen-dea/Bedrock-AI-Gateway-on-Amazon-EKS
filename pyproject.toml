@@ -1,0 +1,25 @@
+[project]
+name = "bedrock-ai-gateway"
+version = "0.1.0"
+description = "FastAPI gateway for mock and Amazon Bedrock chat providers"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "boto3==1.38.23",
+    "fastapi==0.115.12",
+    "prometheus-client==0.22.0",
+    "pydantic-settings==2.9.1",
+    "uvicorn[standard]==0.34.2",
+]
+
+[dependency-groups]
+dev = [
+    "httpx==0.28.1",
+    "pytest==8.3.5",
+    "ruff==0.11.10",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py312"

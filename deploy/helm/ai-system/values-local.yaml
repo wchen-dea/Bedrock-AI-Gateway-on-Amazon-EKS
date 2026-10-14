@@ -1,0 +1,11 @@
+replicaCount: 1
+image:
+  repository: ai-system
+  tag: dev
+  pullPolicy: Never
+config:
+  aiProvider: mock
+autoscaling:
+  enabled: false
+networkPolicy:
+  enabled: false

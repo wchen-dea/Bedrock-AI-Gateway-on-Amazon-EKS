@@ -1,0 +1,5 @@
+aws_region         = "us-west-2"
+cluster_name       = "ai-prod"
+vpc_id             = "vpc-REPLACE"
+private_subnet_ids = ["subnet-REPLACE-A", "subnet-REPLACE-B"]
+bedrock_model_arns = ["arn:aws:bedrock:us-west-2::foundation-model/REPLACE"]
