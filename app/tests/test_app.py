@@ -19,6 +19,12 @@ def test_mock_chat():
     assert 'Mock response' in r.json()['output']
 
 
+def test_agent_uses_configured_provider():
+    r = client.post('/v1/agent', json={'task': 'Summarize Kafka offsets.'})
+    assert r.status_code == 200
+    assert 'Summarize Kafka offsets.' in r.json()['output']
+
+
 def test_ollama_provider():
     class FakeResponse:
         def __enter__(self):

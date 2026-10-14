@@ -15,6 +15,11 @@ class Message(BaseModel):
 class ChatRequest(BaseModel):
     messages: list[Message] = Field(min_length=1, max_length=50)
 
+
+class AgentRequest(BaseModel):
+    task: str = Field(min_length=1, max_length=20000)
+
+
 @app.get("/healthz")
 def healthz():
     return {"status": "ok"}
@@ -37,5 +42,29 @@ def chat(req: ChatRequest):
     except Exception as exc:
         REQUESTS.labels("error").inc()
         raise HTTPException(status_code=502, detail="Foundation model invocation failed") from exc
+    finally:
+        LATENCY.observe(time.perf_counter() - started)
+
+
+@app.post("/v1/agent")
+def agent(req: AgentRequest):
+    started = time.perf_counter()
+    messages = [
+        {
+            "role": "user",
+            "content": (
+                "You are a simple task agent. Solve the user's task directly, "
+                "state assumptions briefly, and return a concise useful answer.\n\n"
+                f"Task: {req.task}"
+            ),
+        }
+    ]
+    try:
+        text = provider().converse(messages)
+        REQUESTS.labels("success").inc()
+        return {"output": text}
+    except Exception as exc:
+        REQUESTS.labels("error").inc()
+        raise HTTPException(status_code=502, detail="Agent invocation failed") from exc
     finally:
         LATENCY.observe(time.perf_counter() - started)
