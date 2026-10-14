@@ -18,6 +18,12 @@ config:
   aiProvider: bedrock
   awsRegion: us-west-2
   bedrockModelId: ""
+  ollamaBaseUrl: http://localhost:11434
+  ollamaModel: llama3.2
+  databricksHost: ""
+  databricksEndpoint: ""
+  databricksTokenSecretName: ""
+  databricksTokenSecretKey: token
 resources:
   requests: {cpu: 250m, memory: 256Mi}
   limits: {cpu: "1", memory: 1Gi}

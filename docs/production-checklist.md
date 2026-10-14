@@ -8,6 +8,7 @@
 - AWS Load Balancer Controller, External Secrets, metrics-server, OTel, policy engine
 
 ## AI runtime
+- Ollama is intended for local development; production deployments use Bedrock
 - Bedrock model access approved per region/account
 - Explicit model allowlist in IAM
 - Prompt-injection controls, input/output validation, request limits

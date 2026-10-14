@@ -26,6 +26,19 @@ spec:
             - {name: AI_PROVIDER, value: {{ .Values.config.aiProvider | quote }}}
             - {name: AWS_REGION, value: {{ .Values.config.awsRegion | quote }}}
             - {name: BEDROCK_MODEL_ID, value: {{ .Values.config.bedrockModelId | quote }}}
+            - {name: OLLAMA_BASE_URL, value: {{ .Values.config.ollamaBaseUrl | quote }}}
+            - {name: OLLAMA_MODEL, value: {{ .Values.config.ollamaModel | quote }}}
+            - {name: DATABRICKS_HOST, value: {{ .Values.config.databricksHost | quote }}}
+            - {name: DATABRICKS_ENDPOINT, value: {{ .Values.config.databricksEndpoint | quote }}}
+            {{- if .Values.config.databricksTokenSecretName }}
+            - name: DATABRICKS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.databricksTokenSecretName | quote }}
+                  key: {{ .Values.config.databricksTokenSecretKey | quote }}
+            {{- else }}
+            - {name: DATABRICKS_TOKEN, value: ""}
+            {{- end }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
           readinessProbe: {httpGet: {path: /readyz, port: http}, initialDelaySeconds: 3, periodSeconds: 10}
           livenessProbe: {httpGet: {path: /healthz, port: http}, initialDelaySeconds: 10, periodSeconds: 20}

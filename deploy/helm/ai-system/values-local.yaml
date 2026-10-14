@@ -4,7 +4,9 @@ image:
   tag: dev
   pullPolicy: Never
 config:
-  aiProvider: mock
+  aiProvider: ollama
+  ollamaBaseUrl: http://host.docker.internal:11434
+  ollamaModel: llama3.2
 autoscaling:
   enabled: false
 networkPolicy:

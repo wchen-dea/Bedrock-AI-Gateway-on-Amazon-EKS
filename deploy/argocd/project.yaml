@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata: {name: ai-platform, namespace: argocd}
 spec:
-  sourceRepos: ['REPLACE_WITH_GIT_REPO']
+  sourceRepos: ['https://github.com/wchen-dea/Bedrock-AI-Gateway-on-Amazon-EKS.git']
   destinations:
     - {namespace: ai-system, server: https://kubernetes.default.svc}
   clusterResourceWhitelist: []
